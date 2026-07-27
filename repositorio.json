@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "titulo": "Calendario Académico 2026",
+    "categoria": "Formatos",
+    "formato": "PDF",
+    "fecha": "Julio 2026",
+    "contenido": "Documento Oficial: Calendario Académico 2026 - Aldea Universitaria José Isidro Silva."
+  },
+  {
+    "id": 2,
+    "titulo": "Guía para Proyectos Socio-Tecnológicos",
+    "categoria": "Guías Académicas",
+    "formato": "PDF",
+    "fecha": "Junio 2026",
+    "contenido": "Guía borrador con las pautas de elaboración e índice de proyectos."
+  },
+  {
+    "id": 3,
+    "titulo": "Planilla de Inscripción y Actualización",
+    "categoria": "Administración",
+    "formato": "PDF",
+    "fecha": "Mayo 2026",
+    "contenido": "Planilla oficial de inscripción para estudiantes Misión Sucre."
+  }
+]

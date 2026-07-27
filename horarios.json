@@ -1,0 +1,34 @@
+[
+  {
+    "id": 1,
+    "materia": "Proyecto Socio-Tecnológico I",
+    "docente": "Ing. Carlos Mendoza",
+    "trayecto": "Trayecto I",
+    "horario": "Sábados 08:00 AM - 11:30 AM",
+    "aula": "Lab 01"
+  },
+  {
+    "id": 2,
+    "materia": "Algoritmos y Programación",
+    "docente": "Lic. María Fernández",
+    "trayecto": "Trayecto I",
+    "horario": "Sábados 01:00 PM - 04:00 PM",
+    "aula": "Aula 03"
+  },
+  {
+    "id": 3,
+    "materia": "Bases de Datos",
+    "docente": "Ing. Roberto Gutiérrez",
+    "trayecto": "Trayecto II",
+    "horario": "Domingos 08:00 AM - 11:30 AM",
+    "aula": "Lab 02"
+  },
+  {
+    "id": 4,
+    "materia": "Redes de Computadores",
+    "docente": "Ing. Patricia Silva",
+    "trayecto": "Trayecto III",
+    "horario": "Sábados 01:00 PM - 04:30 PM",
+    "aula": "Lab 01"
+  }
+]
