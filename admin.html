@@ -40,7 +40,7 @@
       </form>
     </div>
 
-    <!-- Panel de Gestión (Aparece al autenticarse) -->
+    <!-- Panel de Gestión -->
     <div
       class="container admin-dashboard"
       id="adminDashboard"
@@ -52,8 +52,7 @@
             <i data-lucide="shield-check"></i> Gestión de Información Académica
           </h2>
           <p>
-            Los cambios realizados aquí se guardan directamente en el
-            servidor/almacenamiento activo.
+            Los cambios realizados aquí se guardan directamente en el servidor activo.
           </p>
         </div>
         <button onclick="logoutAdmin()" class="btn-secondary">
@@ -62,27 +61,18 @@
       </header>
 
       <div class="admin-grid">
-        <!-- Formulario Agregar Horario/Docente -->
+        <!-- Sección Horarios -->
         <div class="card-box">
-          <h3><i data-lucide="plus-circle"></i> Registrar Horario / Docente</h3>
-          <form onsubmit="saveNewHorario(event)">
+          <h3 id="horarioFormTitle"><i data-lucide="plus-circle"></i> Registrar Horario / Docente</h3>
+          <form onsubmit="saveNewHorario(event)" id="horarioForm">
+            <input type="hidden" id="editHorarioId" value="" />
             <div class="form-group">
               <label>Unidad Curricular</label>
-              <input
-                type="text"
-                id="addMateria"
-                required
-                placeholder="Ej: Proyecto Socio-Tecnológico"
-              />
+              <input type="text" id="addMateria" required placeholder="Ej: Proyecto Socio-Tecnológico" />
             </div>
             <div class="form-group">
               <label>Docente Colaborador</label>
-              <input
-                type="text"
-                id="addDocente"
-                required
-                placeholder="Ej: Ing. Carlos Mendoza"
-              />
+              <input type="text" id="addDocente" required placeholder="Ej: Ing. Carlos Mendoza" />
             </div>
             <div class="form-group">
               <label>Trayecto / PNF</label>
@@ -95,104 +85,64 @@
             </div>
             <div class="form-group">
               <label>Día y Horario</label>
-              <input
-                type="text"
-                id="addHorario"
-                required
-                placeholder="Ej: Sábados 08:00 AM - 11:30 AM"
-              />
+              <input type="text" id="addHorario" required placeholder="Ej: Sábados 08:00 AM - 11:30 AM" />
             </div>
             <div class="form-group">
               <label>Aula / Espacio</label>
-              <input
-                type="text"
-                id="addAula"
-                required
-                placeholder="Ej: Lab 01"
-              />
+              <input type="text" id="addAula" required placeholder="Ej: Lab 01" />
             </div>
-            <button type="submit" class="btn-primary full-width">
-              Guardar en Servidor
-            </button>
+            <button type="submit" id="btnSaveHorario" class="btn-primary full-width">Guardar Horario</button>
+            <button type="button" id="btnCancelHorario" onclick="cancelEditHorario()" class="btn-secondary full-width" style="display:none; margin-top: 0.5rem;">Cancelar Edición</button>
           </form>
+
+          <hr style="border-color: #334155; margin: 1.5rem 0;" />
+          <h4><i data-lucide="list"></i> Horarios Publicados</h4>
+          <div id="horariosList" class="admin-list">Cargando horarios...</div>
         </div>
 
-        <!-- Formulario Configuración Feed Instagram -->
+        <!-- Configuración Feed Instagram -->
         <div class="card-box">
-          <h3>
-            <i data-lucide="instagram"></i> Configuración de Feed Instagram
-          </h3>
+          <h3><i data-lucide="instagram"></i> Configuración Feed Instagram</h3>
           <form onsubmit="saveInstaConfig(event)">
-            <div
-              class="form-group"
-              style="
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                gap: 1rem;
-                margin-bottom: 1.2rem;
-              "
-            >
-              <label style="margin: 0; font-weight: 600"
-                >Mostrar Feed en la Página Principal</label
-              >
+            <div class="form-group" style="display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1.2rem;">
+              <label style="margin: 0; font-weight: 600">Mostrar Feed en la Página Principal</label>
               <label class="switch">
                 <input type="checkbox" id="instaToggle" />
                 <span class="slider round"></span>
               </label>
             </div>
-
             <div class="form-group">
               <label>Usuario de Instagram (sin @)</label>
-              <input
-                type="text"
-                id="instaUsername"
-                placeholder="Ej: mision_sucre_zulia"
-                required
-              />
+              <input type="text" id="instaUsername" placeholder="Ej: mision_sucre_zulia" required />
             </div>
-
-            <button type="submit" class="btn-primary full-width">
-              Guardar Configuración de Feed
-            </button>
+            <button type="submit" class="btn-primary full-width">Guardar Configuración</button>
           </form>
         </div>
 
-        <!-- Formulario Agregar Documento -->
+        <!-- Sección Documentos -->
         <div class="card-box">
-          <h3><i data-lucide="file-plus"></i> Registrar Documento Oficial</h3>
-          <form onsubmit="saveNewDoc(event)">
+          <h3 id="docFormTitle"><i data-lucide="file-plus"></i> Registrar Documento Oficial</h3>
+          <form onsubmit="saveNewDoc(event)" id="docForm">
+            <input type="hidden" id="editDocId" value="" />
             <div class="form-group">
               <label>Título del Documento</label>
-              <input
-                type="text"
-                id="addDocTitulo"
-                required
-                placeholder="Ej: Calendario II-2026"
-              />
+              <input type="text" id="addDocTitulo" required placeholder="Ej: Calendario II-2026" />
             </div>
             <div class="form-group">
               <label>Categoría</label>
-              <input
-                type="text"
-                id="addDocCat"
-                required
-                placeholder="Ej: Cronogramas"
-              />
+              <input type="text" id="addDocCat" required placeholder="Ej: Cronogramas" />
             </div>
             <div class="form-group">
               <label>Contenido / Resumen</label>
-              <textarea
-                id="addDocContenido"
-                rows="3"
-                required
-                placeholder="Descripción o texto informativo del documento..."
-              ></textarea>
+              <textarea id="addDocContenido" rows="3" required placeholder="Descripción informativa..."></textarea>
             </div>
-            <button type="submit" class="btn-primary full-width">
-              Guardar Documento
-            </button>
+            <button type="submit" id="btnSaveDoc" class="btn-primary full-width">Guardar Documento</button>
+            <button type="button" id="btnCancelDoc" onclick="cancelEditDoc()" class="btn-secondary full-width" style="display:none; margin-top: 0.5rem;">Cancelar Edición</button>
           </form>
+
+          <hr style="border-color: #334155; margin: 1.5rem 0;" />
+          <h4><i data-lucide="file-text"></i> Documentos Publicados</h4>
+          <div id="docsList" class="admin-list">Cargando documentos...</div>
         </div>
       </div>
     </div>
