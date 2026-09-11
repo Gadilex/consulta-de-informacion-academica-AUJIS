@@ -30,13 +30,5 @@
     "trayecto": "Trayecto III",
     "horario": "Sábados 01:00 PM - 04:30 PM",
     "aula": "Lab 01"
-  },
-  {
-    "id": "1789088400552",
-    "unidad": "test",
-    "docente": "test",
-    "trayecto": "Trayecto I",
-    "horario": "test",
-    "aula": "test"
   }
 ]
