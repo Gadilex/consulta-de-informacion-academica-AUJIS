@@ -52,15 +52,14 @@ async function saveToJsonInGitHub(filePath, newJsonObject, commitMessage) {
     return false;
   }
 
-  const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${filePath}`;
+  // Agregamos parámetro de tiempo para evitar el caché sin romper CORS
+  const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${filePath}?t=` + Date.now();
 
   try {
-    // Petición anti-caché para obtener el SHA exacto del archivo remoto
-    const getRes = await fetch(url + '?t=' + Date.now(), {
+    const getRes = await fetch(url, {
       headers: {
         'Authorization': `Bearer ${token}`,
-        'Accept': 'application/vnd.github.v3+json',
-        'Cache-Control': 'no-cache'
+        'Accept': 'application/vnd.github.v3+json'
       }
     });
 
@@ -70,10 +69,13 @@ async function saveToJsonInGitHub(filePath, newJsonObject, commitMessage) {
       sha = fileData.sha;
     }
 
+    // Codificación segura a Base64 compatible con UTF-8 (acentos y ñ)
     const jsonString = JSON.stringify(newJsonObject, null, 2);
-    const contentBase64 = btoa(unescape(encodeURIComponent(jsonString)));
+    const bytes = new TextEncoder().encode(jsonString);
+    const binString = String.fromCharCode(...bytes);
+    const contentBase64 = btoa(binString);
 
-    const putRes = await fetch(url, {
+    const putRes = await fetch(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${filePath}`, {
       method: 'PUT',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -95,16 +97,16 @@ async function saveToJsonInGitHub(filePath, newJsonObject, commitMessage) {
     } else {
       const errorData = await putRes.json();
       if (putRes.status === 401) {
-        alert('❌ Token de GitHub inválido.');
+        alert('❌ Token de GitHub inválido o expirado.');
         localStorage.removeItem('gh_admin_token');
       } else {
-        alert(`❌ Error al guardar en GitHub: ${errorData.message}`);
+        alert(`❌ Error de GitHub [${putRes.status}]: ${errorData.message}`);
       }
       return false;
     }
   } catch (error) {
-    console.error('Error de red:', error);
-    alert('❌ Ocurrió un error al conectar con GitHub.');
+    console.error('Error detallado:', error);
+    alert(`❌ Ocurrió un error al conectar con GitHub: ${error.message}`);
     return false;
   }
 }
