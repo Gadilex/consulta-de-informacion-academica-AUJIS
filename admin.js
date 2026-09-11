@@ -52,10 +52,10 @@ async function saveToJsonInGitHub(filePath, newJsonObject, commitMessage) {
     return false;
   }
 
-  // Agregamos parámetro de tiempo para evitar el caché sin romper CORS
   const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${filePath}?t=` + Date.now();
 
   try {
+    // 1. Obtener SHA actual del archivo remoto
     const getRes = await fetch(url, {
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -69,12 +69,21 @@ async function saveToJsonInGitHub(filePath, newJsonObject, commitMessage) {
       sha = fileData.sha;
     }
 
-    // Codificación segura a Base64 compatible con UTF-8 (acentos y ñ)
+    // 2. Convertir JSON a Base64 de forma segura vía Blob / FileReader
     const jsonString = JSON.stringify(newJsonObject, null, 2);
-    const bytes = new TextEncoder().encode(jsonString);
-    const binString = String.fromCharCode(...bytes);
-    const contentBase64 = btoa(binString);
+    const blob = new Blob([jsonString], { type: 'application/json;charset=utf-8' });
+    
+    const contentBase64 = await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const base64 = reader.result.split(',')[1];
+        resolve(base64);
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
 
+    // 3. Enviar actualización a GitHub
     const putRes = await fetch(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${filePath}`, {
       method: 'PUT',
       headers: {
@@ -106,7 +115,7 @@ async function saveToJsonInGitHub(filePath, newJsonObject, commitMessage) {
     }
   } catch (error) {
     console.error('Error detallado:', error);
-    alert(`❌ Ocurrió un error al conectar con GitHub: ${error.message}`);
+    alert(`❌ Error: ${error.message}`);
     return false;
   }
 }
