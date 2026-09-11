@@ -32,7 +32,7 @@ function logoutAdmin() {
   document.getElementById('loginBox').style.display = 'block';
 }
 
-// 2. CONEXIÓN CON GITHUB API
+// 2. CONEXIÓN CON GITHUB API (CON ANTI-CACHÉ DE SHA)
 function getGitHubToken() {
   let token = localStorage.getItem('gh_admin_token');
   if (!token) {
@@ -55,10 +55,12 @@ async function saveToJsonInGitHub(filePath, newJsonObject, commitMessage) {
   const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${filePath}`;
 
   try {
-    const getRes = await fetch(url, {
+    // Petición anti-caché para obtener el SHA exacto del archivo remoto
+    const getRes = await fetch(url + '?t=' + Date.now(), {
       headers: {
         'Authorization': `Bearer ${token}`,
-        'Accept': 'application/vnd.github.v3+json'
+        'Accept': 'application/vnd.github.v3+json',
+        'Cache-Control': 'no-cache'
       }
     });
 
@@ -139,7 +141,7 @@ function startEditHorario(id) {
   if (!item) return;
 
   document.getElementById('editHorarioId').value = item.id;
-  document.getElementById('addMateria').value = item.unidad;
+  document.getElementById('addMateria').value = item.unidad || item.materia || '';
   document.getElementById('addDocente').value = item.docente;
   document.getElementById('addTrayecto').value = item.trayecto;
   document.getElementById('addHorario').value = item.horario;
@@ -227,12 +229,18 @@ async function deleteDoc(id) {
   await saveToJsonInGitHub('repositorio.json', currentDocs, 'Eliminar documento');
 }
 
-// 5. RENDERIZAR LISTAS EN EL PANEL (ANTI-CACHÉ)
+// 5. RENDERIZAR LISTAS EN EL PANEL (ESTILOS Y ASIGNACIÓN DE ID CORREGIDOS)
 async function loadDashboardLists() {
-  // 1. CARGAR Y RENDERIZAR HORARIOS
+  // Cargar Horarios
   try {
     const resH = await fetch('./horarios.json?t=' + Date.now());
-    currentHorarios = resH.ok ? await resH.json() : [];
+    const rawHorarios = resH.ok ? await resH.json() : [];
+    
+    currentHorarios = rawHorarios.map((h, index) => ({
+      id: h.id || (Date.now() + index).toString(),
+      ...h
+    }));
+
     const hContainer = document.getElementById('horariosList');
     
     if (currentHorarios.length === 0) {
@@ -254,10 +262,16 @@ async function loadDashboardLists() {
     }
   } catch (err) { console.error(err); }
 
-  // 2. CARGAR Y RENDERIZAR DOCUMENTOS
+  // Cargar Documentos
   try {
     const resD = await fetch('./repositorio.json?t=' + Date.now());
-    currentDocs = resD.ok ? await resD.json() : [];
+    const rawDocs = resD.ok ? await resD.json() : [];
+    
+    currentDocs = rawDocs.map((d, index) => ({
+      id: d.id || (Date.now() + index).toString(),
+      ...d
+    }));
+
     const dContainer = document.getElementById('docsList');
 
     if (currentDocs.length === 0) {
@@ -278,6 +292,8 @@ async function loadDashboardLists() {
     }
   } catch (err) { console.error(err); }
 }
+
+// 6. CONFIGURACIÓN DE INSTAGRAM
 async function saveInstaConfig(e) {
   if (e) e.preventDefault();
   const enabled = document.getElementById('instaToggle').checked;
