@@ -710,3 +710,96 @@ textarea {
   background-color: #e11d48;
   color: #fff;
 }
+
+/* Corrección de contraste para todos los textos e inputs dentro del Dashboard de Admin */
+#adminDashboard {
+  color: #f8fafc !important;
+}
+
+#adminDashboard h1,
+#adminDashboard h2,
+#adminDashboard h3,
+#adminDashboard h4,
+#adminDashboard label,
+#adminDashboard strong {
+  color: #f8fafc !important;
+}
+
+#adminDashboard p,
+#adminDashboard span,
+#adminDashboard small {
+  color: #94a3b8 !important;
+}
+
+/* Estilos para inputs, select y textareas del panel */
+#adminDashboard input[type="text"],
+#adminDashboard input[type="password"],
+#adminDashboard input[type="url"],
+#adminDashboard select,
+#adminDashboard textarea {
+  background-color: #0f172a !important;
+  color: #ffffff !important;
+  border: 1px solid #334155 !important;
+  padding: 0.6rem 0.8rem !important;
+  border-radius: 6px !important;
+}
+
+#adminDashboard input::placeholder,
+#adminDashboard textarea::placeholder {
+  color: #64748b !important;
+}
+
+/* Alineación y estilo visual para la opción de Instagram / Toggle */
+#adminDashboard .form-group-checkbox,
+#adminDashboard label[for="instaToggle"] {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+  color: #f8fafc !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+}
+
+/* Ajustes de legibilidad para el panel de Login */
+#loginBox {
+  color: #f8fafc !important;
+}
+
+#loginBox h2, 
+#loginBox h3, 
+#loginBox label {
+  color: #f8fafc !important;
+}
+
+#loginBox p {
+  color: #94a3b8 !important;
+}
+
+#loginBox input[type="text"],
+#loginBox input[type="password"] {
+  background-color: #0f172a !important;
+  color: #ffffff !important;
+  border: 1px solid #334155 !important;
+  padding: 0.75rem 1rem !important;
+  border-radius: 6px !important;
+}
+
+#loginBox input[type="text"]::placeholder,
+#loginBox input[type="password"]::placeholder {
+  color: #64748b !important;
+}
+
+#loginBox button[type="submit"] {
+  background-color: #0284c7 !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  border: none !important;
+  padding: 0.75rem 1rem !important;
+  border-radius: 6px !important;
+  cursor: pointer !important;
+  transition: background-color 0.2s ease !important;
+}
+
+#loginBox button[type="submit"]:hover {
+  background-color: #0369a1 !important;
+}
