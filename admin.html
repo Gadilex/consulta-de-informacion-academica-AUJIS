@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Acceso Administrativo - Aldea "José Isidro Silva"</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://unpkg.com/lucide@latest"></script>
+  </head>
+  <body class="admin-body">
+    <div class="admin-login-card" id="loginBox">
+      <div class="admin-header">
+        <img src="logo.png" alt="Logo" width="60" height="70" />
+        <h2>Panel Administrativo</h2>
+        <p>Aldea Universitaria "José Isidro Silva"</p>
+      </div>
+
+      <form id="adminLoginForm" onsubmit="handleAdminLogin(event)">
+        <div class="form-group">
+          <label><i data-lucide="user"></i> Usuario</label>
+          <input
+            type="text"
+            id="adminUser"
+            required
+            placeholder="Ingrese su usuario"
+          />
+        </div>
+        <div class="form-group">
+          <label><i data-lucide="key"></i> Contraseña</label>
+          <input
+            type="password"
+            id="adminPass"
+            required
+            placeholder="••••••••"
+          />
+        </div>
+        <button type="submit" class="btn-primary full-width">
+          Iniciar Sesión
+        </button>
+      </form>
+    </div>
+
+    <!-- Panel de Gestión (Aparece al autenticarse) -->
+    <div
+      class="container admin-dashboard"
+      id="adminDashboard"
+      style="display: none"
+    >
+      <header class="admin-dash-header">
+        <div>
+          <h2>
+            <i data-lucide="shield-check"></i> Gestión de Información Académica
+          </h2>
+          <p>
+            Los cambios realizados aquí se guardan directamente en el
+            servidor/almacenamiento activo.
+          </p>
+        </div>
+        <button onclick="logoutAdmin()" class="btn-secondary">
+          <i data-lucide="log-out"></i> Salir del Panel
+        </button>
+      </header>
+
+      <div class="admin-grid">
+        <!-- Formulario Agregar Horario/Docente -->
+        <div class="card-box">
+          <h3><i data-lucide="plus-circle"></i> Registrar Horario / Docente</h3>
+          <form onsubmit="saveNewHorario(event)">
+            <div class="form-group">
+              <label>Unidad Curricular</label>
+              <input
+                type="text"
+                id="addMateria"
+                required
+                placeholder="Ej: Proyecto Socio-Tecnológico"
+              />
+            </div>
+            <div class="form-group">
+              <label>Docente Colaborador</label>
+              <input
+                type="text"
+                id="addDocente"
+                required
+                placeholder="Ej: Ing. Carlos Mendoza"
+              />
+            </div>
+            <div class="form-group">
+              <label>Trayecto / PNF</label>
+              <select id="addTrayecto">
+                <option value="Trayecto I">Trayecto I</option>
+                <option value="Trayecto II">Trayecto II</option>
+                <option value="Trayecto III">Trayecto III</option>
+                <option value="Trayecto IV">Trayecto IV</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Día y Horario</label>
+              <input
+                type="text"
+                id="addHorario"
+                required
+                placeholder="Ej: Sábados 08:00 AM - 11:30 AM"
+              />
+            </div>
+            <div class="form-group">
+              <label>Aula / Espacio</label>
+              <input
+                type="text"
+                id="addAula"
+                required
+                placeholder="Ej: Lab 01"
+              />
+            </div>
+            <button type="submit" class="btn-primary full-width">
+              Guardar en Servidor
+            </button>
+          </form>
+        </div>
+
+        <!-- Formulario Configuración Feed Instagram -->
+        <div class="card-box">
+          <h3>
+            <i data-lucide="instagram"></i> Configuración de Feed Instagram
+          </h3>
+          <form onsubmit="saveInstaConfig(event)">
+            <div
+              class="form-group"
+              style="
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 1rem;
+                margin-bottom: 1.2rem;
+              "
+            >
+              <label style="margin: 0; font-weight: 600"
+                >Mostrar Feed en la Página Principal</label
+              >
+              <label class="switch">
+                <input type="checkbox" id="instaToggle" />
+                <span class="slider round"></span>
+              </label>
+            </div>
+
+            <div class="form-group">
+              <label>Usuario de Instagram (sin @)</label>
+              <input
+                type="text"
+                id="instaUsername"
+                placeholder="Ej: mision_sucre_zulia"
+                required
+              />
+            </div>
+
+            <button type="submit" class="btn-primary full-width">
+              Guardar Configuración de Feed
+            </button>
+          </form>
+        </div>
+
+        <!-- Formulario Agregar Documento -->
+        <div class="card-box">
+          <h3><i data-lucide="file-plus"></i> Registrar Documento Oficial</h3>
+          <form onsubmit="saveNewDoc(event)">
+            <div class="form-group">
+              <label>Título del Documento</label>
+              <input
+                type="text"
+                id="addDocTitulo"
+                required
+                placeholder="Ej: Calendario II-2026"
+              />
+            </div>
+            <div class="form-group">
+              <label>Categoría</label>
+              <input
+                type="text"
+                id="addDocCat"
+                required
+                placeholder="Ej: Cronogramas"
+              />
+            </div>
+            <div class="form-group">
+              <label>Contenido / Resumen</label>
+              <textarea
+                id="addDocContenido"
+                rows="3"
+                required
+                placeholder="Descripción o texto informativo del documento..."
+              ></textarea>
+            </div>
+            <button type="submit" class="btn-primary full-width">
+              Guardar Documento
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script src="admin.js"></script>
+  </body>
+</html>

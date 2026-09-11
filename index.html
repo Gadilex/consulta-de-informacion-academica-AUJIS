@@ -3,92 +3,159 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>
-      Aldea Universitaria "José Isidro Silva" - Plataforma Académica
-    </title>
+    <title>Aldea Universitaria "José Isidro Silva" - Portal Académico</title>
     <link rel="stylesheet" href="styles.css" />
     <script src="https://unpkg.com/lucide@latest"></script>
   </head>
   <body>
-    <!-- Encabezado Institucional -->
+    <!-- Barra Superior / Top Bar -->
+    <div class="top-bar">
+      <div class="container top-bar-content">
+        <span
+          >República Bolivariana de Venezuela • MPPEU • Misión Sucre Zulia</span
+        >
+        <div class="top-links">
+          <small>Municipio Santa Rita, Edo. Zulia</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Encabezado Principal / Navbar -->
     <header class="navbar">
-      <div class="logo-container">
-        <div class="logo-text">
-          <div class="logo-icon"><i data-lucide="graduation-cap"></i></div>
-          <div>
+      <div class="container nav-container">
+        <div class="brand">
+          <img
+            src="logo.png"
+            alt="Logo Aldea José Isidro Silva"
+            class="brand-logo"
+            width="60"
+            height="70"
+          />
+          <div class="brand-text">
             <h1>Aldea Universitaria "José Isidro Silva"</h1>
-            <p>Municipio Santa Rita, Estado Zulia — MPPEU / Misión Sucre</p>
+            <p>Plataforma Digital de Información Académica</p>
           </div>
         </div>
-        <button class="btn-login" id="authBtn" onclick="toggleAuthModal()">
-          <i data-lucide="lock"></i> Acceso Admin
-        </button>
+        <nav class="nav-menu">
+          <a href="#inicio" class="nav-link active">Inicio</a>
+          <a href="#horarios" class="nav-link" onclick="switchTab('horarios')"
+            >Horarios</a
+          >
+          <a href="#docentes" class="nav-link" onclick="switchTab('horarios')"
+            >Docentes</a
+          >
+          <a
+            href="#repositorio"
+            class="nav-link"
+            onclick="switchTab('repositorio')"
+            >Documentos</a
+          >
+        </nav>
       </div>
     </header>
 
     <main class="container">
-      <!-- Indicador de Sesión Admin -->
-      <div id="adminBanner" class="admin-banner" style="display: none">
-        <p>
-          <i data-lucide="shield-check"></i> Modo Administración Activo: Puedes
-          agregar registros al sistema.
-        </p>
-        <button onclick="logoutAdmin()" class="btn-logout">
-          Cerrar Sesión
-        </button>
-      </div>
-
-      <!-- Hero Card -->
-      <section class="hero-card">
-        <h2>Plataforma Digital de Consulta Académica</h2>
-        <p>
-          Accede de forma directa a la distribución de horarios, docentes
-          colaboradores por unidad curricular y repositorio digital oficial.
-        </p>
+      <!-- Sección Hero Institucional -->
+      <section class="hero-section" id="inicio">
+        <div class="hero-text">
+          <span class="hero-badge">Consulta Digital Centralizada</span>
+          <h2>Transparencia y Eficiencia en la Información Académica</h2>
+          <p>
+            Acceda a la programación oficial de horarios, consulta de docentes
+            colaboradores por unidad curricular y descarga de formatos
+            institucionales de la Aldea "José Isidro Silva".
+          </p>
+          <div class="hero-actions">
+            <button
+              class="btn-primary"
+              onclick="scrollToSection('tab-horarios')"
+            >
+              <i data-lucide="calendar"></i> Consultar Horarios
+            </button>
+            <button
+              class="btn-secondary"
+              onclick="scrollToSection('tab-repositorio')"
+            >
+              <i data-lucide="file-text"></i> Repositorio Digital
+            </button>
+          </div>
+        </div>
+        <div class="hero-card-img">
+          <div class="hero-img-placeholder">
+            <i data-lucide="building-2"></i>
+            <h3>Aldea Universitaria</h3>
+            <p>Santa Rita - Zulia</p>
+          </div>
+        </div>
       </section>
 
-      <!-- Navegación -->
-      <nav class="tabs">
-        <button class="tab-btn active" onclick="switchTab('horarios')">
-          <i data-lucide="calendar"></i> Horarios y Docentes
+      <!-- Métricas / Indicadores Rápidos -->
+      <section class="stats-grid">
+        <div class="stat-card">
+          <i data-lucide="book-open"></i>
+          <div>
+            <h4 id="statMaterias">0</h4>
+            <p>Unidades Curriculares</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <i data-lucide="users"></i>
+          <div>
+            <h4 id="statDocentes">0</h4>
+            <p>Docentes Colaboradores</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <i data-lucide="file-check-2"></i>
+          <div>
+            <h4 id="statDocs">0</h4>
+            <p>Documentos Oficiales</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Navegación por Pestañas -->
+      <nav class="tabs-nav">
+        <button
+          class="tab-btn active"
+          onclick="switchTab('horarios')"
+          id="tabBtnHorarios"
+        >
+          <i data-lucide="clock"></i> Horarios y Unidades Curriculares
         </button>
-        <button class="tab-btn" onclick="switchTab('repositorio')">
-          <i data-lucide="folder-down"></i> Repositorio Digital
+        <button
+          class="tab-btn"
+          onclick="switchTab('repositorio')"
+          id="tabBtnRepo"
+        >
+          <i data-lucide="folder-open"></i> Repositorio Digital Centralizado
         </button>
       </nav>
 
-      <!-- Horarios -->
+      <!-- SECCIÓN: Horarios y Docentes -->
       <section id="tab-horarios" class="tab-content active">
-        <div class="filter-box">
-          <div class="search-wrapper">
+        <div class="filter-card">
+          <div class="search-box">
             <i data-lucide="search"></i>
             <input
               type="text"
               id="searchInput"
-              placeholder="Buscar por materia, docente o aula..."
+              placeholder="Buscar por materia, docente colaborador o aula..."
               onkeyup="filterData()"
             />
           </div>
-
-          <select id="trayectoSelect" onchange="filterData()">
-            <option value="todos">Todos los Trayectos</option>
-            <option value="Trayecto I">Trayecto I</option>
-            <option value="Trayecto II">Trayecto II</option>
-            <option value="Trayecto III">Trayecto III</option>
-            <option value="Trayecto IV">Trayecto IV</option>
-          </select>
-
-          <button
-            id="addHorarioBtn"
-            class="btn-add"
-            style="display: none"
-            onclick="openAddModal()"
-          >
-            <i data-lucide="plus-circle"></i> Nuevo Horario
-          </button>
+          <div class="select-box">
+            <select id="trayectoSelect" onchange="filterData()">
+              <option value="todos">Todos los Trayectos / PNF</option>
+              <option value="Trayecto I">Trayecto I</option>
+              <option value="Trayecto II">Trayecto II</option>
+              <option value="Trayecto III">Trayecto III</option>
+              <option value="Trayecto IV">Trayecto IV</option>
+            </select>
+          </div>
         </div>
 
-        <div class="table-container">
+        <div class="table-card">
           <table>
             <thead>
               <tr>
@@ -96,7 +163,7 @@
                 <th>Docente Colaborador</th>
                 <th>Trayecto</th>
                 <th>Día y Horario</th>
-                <th>Aula</th>
+                <th>Aula / Espacio</th>
               </tr>
             </thead>
             <tbody id="tableBody"></tbody>
@@ -104,90 +171,88 @@
         </div>
       </section>
 
-      <!-- Repositorio -->
+      <!-- SECCIÓN: Feed de Instagram (Controlado dinámicamente desde Admin) -->
+      <section
+        id="instagram-feed-section"
+        class="card-box"
+        style="display: none; margin-top: 2rem"
+      >
+        <div
+          class="section-title"
+          style="
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+          "
+        >
+          <div style="display: flex; align-items: center; gap: 0.5rem">
+            <i data-lucide="instagram" style="color: #e1306c"></i>
+            <h3 style="margin: 0; font-size: 1.1rem">Novedades en Instagram</h3>
+          </div>
+          <a
+            id="instaLink"
+            href="#"
+            target="_blank"
+            class="btn-secondary"
+            style="font-size: 0.8rem; text-decoration: none"
+          >
+            Ver Perfil Oficial <i data-lucide="external-link"></i>
+          </a>
+        </div>
+
+        <div
+          class="insta-feed-wrapper"
+          style="
+            border-radius: var(--radius);
+            overflow: hidden;
+            background: #fff;
+          "
+        >
+          <!-- Embed / Muestra del Feed -->
+          <iframe
+            id="instaIframe"
+            src=""
+            width="100%"
+            height="450"
+            frameborder="0"
+            scrolling="no"
+            allowtransparency="true"
+            style="border: none; overflow: hidden"
+          ></iframe>
+        </div>
+      </section>
+
+      <!-- SECCIÓN: Repositorio Digital -->
       <section id="tab-repositorio" class="tab-content">
-        <div class="section-header">
-          <h3>Documentación Oficial</h3>
-          <p>Descarga directa de documentos oficiales en formato PDF.</p>
+        <div class="section-title">
+          <h3>Repositorio Digital de Documentación Oficial</h3>
+          <p>
+            Descarga directa de cronogramas, normativas y formatos de proyecto.
+          </p>
         </div>
         <div class="repo-grid" id="repoGrid"></div>
       </section>
     </main>
 
-    <!-- Modal de Login -->
-    <div id="loginModal" class="modal">
-      <div class="modal-content">
-        <span class="close-btn" onclick="toggleAuthModal()">&times;</span>
-        <h3><i data-lucide="user-check"></i> Iniciar Sesión Administración</h3>
-        <form id="loginForm" onsubmit="handleLogin(event)">
-          <div class="form-group">
-            <label>Usuario</label>
-            <input type="text" id="adminUser" required placeholder="admin" />
+    <!-- Footer Institucional Azul Oscuro -->
+    <footer class="footer-dark">
+      <div class="container footer-content">
+        <div class="footer-brand">
+          <img src="logo.png" alt="Logo Footer" width="50" height="60" />
+          <div>
+            <h4>Aldea Universitaria "José Isidro Silva"</h4>
+            <p>Municipio Santa Rita, Estado Zulia, Venezuela</p>
           </div>
-          <div class="form-group">
-            <label>Contraseña</label>
-            <input
-              type="password"
-              id="adminPass"
-              required
-              placeholder="••••••••"
-            />
-          </div>
-          <button type="submit" class="btn-submit">Ingresar</button>
-        </form>
+        </div>
+        <div class="footer-info">
+          <p>&copy; 2026 - Misión Sucre / MPPEU</p>
+          <small
+            >Desarrollado para la optimización de procesos de orientación
+            estudiantil e información académica.</small
+          >
+        </div>
       </div>
-    </div>
-
-    <!-- Modal para Agregar Horarios (Solo Admin) -->
-    <div id="addModal" class="modal">
-      <div class="modal-content">
-        <span class="close-btn" onclick="closeAddModal()">&times;</span>
-        <h3>Nuevo Registro Académico</h3>
-        <form onsubmit="handleAddHorario(event)">
-          <div class="form-group">
-            <label>Materia</label><input type="text" id="newMateria" required />
-          </div>
-          <div class="form-group">
-            <label>Docente</label><input type="text" id="newDocente" required />
-          </div>
-          <div class="form-group">
-            <label>Trayecto</label>
-            <select id="newTrayecto">
-              <option value="Trayecto I">Trayecto I</option>
-              <option value="Trayecto II">Trayecto II</option>
-              <option value="Trayecto III">Trayecto III</option>
-              <option value="Trayecto IV">Trayecto IV</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Horario</label
-            ><input
-              type="text"
-              id="newHorario"
-              placeholder="Ej: Sábados 8:00 AM"
-              required
-            />
-          </div>
-          <div class="form-group">
-            <label>Aula</label
-            ><input
-              type="text"
-              id="newAula"
-              placeholder="Ej: Aula 02"
-              required
-            />
-          </div>
-          <button type="submit" class="btn-submit">Guardar Registro</button>
-        </form>
-      </div>
-    </div>
-
-    <footer>
-      <p>
-        &copy; Plataforma de Información Académica — Aldea Universitaria "José
-        Isidro Silva"
-      </p>
-      <small>Santa Rita, Estado Zulia, Venezuela</small>
     </footer>
 
     <script src="script.js"></script>

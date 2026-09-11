@@ -1,109 +1,109 @@
 let horariosData = [];
 let repositorioData = [];
-let isAdmin = false;
 
-// Cargar datos desde JSON
-async function loadInitialData() {
-  try {
-    const resHorarios = await fetch("horarios.json");
-    horariosData = await resHorarios.json();
+// Cargar Datos con fallback a LocalStorage
+async function initPortal() {
+  const savedHorarios = localStorage.getItem("aldea_horarios");
+  const savedRepo = localStorage.getItem("aldea_repo");
 
+  if (savedHorarios) {
+    horariosData = JSON.parse(savedHorarios);
+  } else {
+    const res = await fetch("horarios.json");
+    horariosData = await res.json();
+    localStorage.setItem("aldea_horarios", JSON.stringify(horariosData));
+  }
+
+  if (savedRepo) {
+    repositorioData = JSON.parse(savedRepo);
+  } else {
     const resRepo = await fetch("repositorio.json");
     repositorioData = await resRepo.json();
-
-    renderHorarios(horariosData);
-    renderRepositorio(repositorioData);
-  } catch (error) {
-    console.error("Error al cargar archivos JSON:", error);
+    localStorage.setItem("aldea_repo", JSON.stringify(repositorioData));
   }
+
+  renderHorarios(horariosData);
+  renderRepositorio(repositorioData);
+  loadInstagramFeed();
+  updateStats();
 }
 
-// Renderizar tabla de horarios
-function renderHorarios(data) {
-  const tableBody = document.getElementById("tableBody");
-  tableBody.innerHTML = "";
+function updateStats() {
+  document.getElementById("statMaterias").innerText = horariosData.length;
+  const docentesUnicos = new Set(horariosData.map((h) => h.docente)).size;
+  document.getElementById("statDocentes").innerText = docentesUnicos;
+  document.getElementById("statDocs").innerText = repositorioData.length;
+}
 
-  if (data.length === 0) {
-    tableBody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding: 20px;">No se encontraron registros.</td></tr>`;
-    return;
-  }
+function renderHorarios(data) {
+  const tbody = document.getElementById("tableBody");
+  tbody.innerHTML = "";
 
   data.forEach((item) => {
-    const row = document.createElement("tr");
-    row.innerHTML = `
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
       <td><strong>${item.materia}</strong></td>
       <td>${item.docente}</td>
-      <td><span class="badge">${item.trayecto}</span></td>
+      <td><span class="hero-badge">${item.trayecto}</span></td>
       <td>${item.horario}</td>
       <td>${item.aula}</td>
     `;
-    tableBody.appendChild(row);
+    tbody.appendChild(tr);
   });
 }
 
-// Renderizar repositorio
 function renderRepositorio(data) {
-  const repoGrid = document.getElementById("repoGrid");
-  repoGrid.innerHTML = "";
+  const grid = document.getElementById("repoGrid");
+  grid.innerHTML = "";
 
   data.forEach((item) => {
     const card = document.createElement("div");
-    card.className = "repo-card";
+    card.className = "repo-item";
     card.innerHTML = `
-      <div class="repo-icon"><i data-lucide="file-text"></i></div>
-      <div class="repo-info">
+      <div>
         <h4>${item.titulo}</h4>
-        <p><small>${item.categoria} • ${item.fecha}</small></p>
+        <p><small>${item.categoria} • ${item.fecha || "2026"}</small></p>
       </div>
-      <button class="btn-download" onclick="downloadPDF('${item.titulo}', '${item.contenido}')">
-        <i data-lucide="download"></i> Descargar ${item.formato}
+      <button class="btn-primary" onclick="downloadDoc('${item.titulo}', '${
+      item.contenido
+    }')">
+        <i data-lucide="download"></i> Descargar Documento
       </button>
     `;
-    repoGrid.appendChild(card);
+    grid.appendChild(card);
   });
   lucide.createIcons();
 }
 
-// SOLUCIÓN AL CONGELAMIENTO: Generador y Descargador seguro de PDF/Texto mediante BLOB
-function downloadPDF(filename, textContent) {
+function downloadDoc(title, content) {
   const blob = new Blob(
-    [
-      `ALDEA UNIVERSITARIA JOSE ISIDRO SILVA\nDOCUMENTO OFICIAL\n\n${filename}\n\n${textContent}`,
-    ],
+    [`DOCUMENTO OFICIAL - ALDEA JOSE ISIDRO SILVA\n\n${title}\n\n${content}`],
     { type: "text/plain;charset=utf-8" }
   );
   const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = `${filename.replace(/\s+/g, "_")}.txt`;
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `${title.replace(/\s+/g, "_")}.txt`;
+  a.click();
   URL.revokeObjectURL(url);
 }
 
-// Filtrar horarios
 function filterData() {
-  const searchValue = document
-    .getElementById("searchInput")
-    .value.toLowerCase();
-  const trayectoValue = document.getElementById("trayectoSelect").value;
+  const search = document.getElementById("searchInput").value.toLowerCase();
+  const trayecto = document.getElementById("trayectoSelect").value;
 
   const filtered = horariosData.filter((item) => {
-    const matchesSearch =
-      item.materia.toLowerCase().includes(searchValue) ||
-      item.docente.toLowerCase().includes(searchValue) ||
-      item.aula.toLowerCase().includes(searchValue);
-    const matchesTrayecto =
-      trayectoValue === "todos" || item.trayecto === trayectoValue;
-    return matchesSearch && matchesTrayecto;
+    const matchSearch =
+      item.materia.toLowerCase().includes(search) ||
+      item.docente.toLowerCase().includes(search);
+    const matchTrayecto = trayecto === "todos" || item.trayecto === trayecto;
+    return matchSearch && matchTrayecto;
   });
 
   renderHorarios(filtered);
 }
 
-// Cambiar pestañas
-function switchTab(tabName) {
+function switchTab(tab) {
   document
     .querySelectorAll(".tab-content")
     .forEach((el) => el.classList.remove("active"));
@@ -111,71 +111,67 @@ function switchTab(tabName) {
     .querySelectorAll(".tab-btn")
     .forEach((el) => el.classList.remove("active"));
 
-  if (tabName === "horarios") {
+  if (tab === "horarios") {
     document.getElementById("tab-horarios").classList.add("active");
+    document.getElementById("tabBtnHorarios").classList.add("active");
   } else {
     document.getElementById("tab-repositorio").classList.add("active");
+    document.getElementById("tabBtnRepo").classList.add("active");
   }
-  event.currentTarget.classList.add("active");
-  lucide.createIcons();
 }
 
-// Modales y Autenticación Admin
-function toggleAuthModal() {
-  const modal = document.getElementById("loginModal");
-  modal.style.display = modal.style.display === "flex" ? "none" : "flex";
+function scrollToSection(id) {
+  document.getElementById(id).scrollIntoView({ behavior: "smooth" });
 }
 
-function handleLogin(e) {
-  e.preventDefault();
-  const user = document.getElementById("adminUser").value;
-  const pass = document.getElementById("adminPass").value;
+/*function loadInstagramFeed() {
+  const config = JSON.parse(
+    localStorage.getItem("aldea_insta_config") ||
+      '{"enabled": false, "username": ""}'
+  );
+  const feedSection = document.getElementById("instagram-feed-section");
+  const iframe = document.getElementById("instaIframe");
+  const link = document.getElementById("instaLink");
 
-  if (user === "admin" && pass === "1234") {
-    isAdmin = true;
-    document.getElementById("adminBanner").style.display = "flex";
-    document.getElementById("addHorarioBtn").style.display = "inline-flex";
-    document.getElementById("authBtn").style.display = "none";
-    toggleAuthModal();
-    alert("¡Sesión de Administración Iniciada!");
+  if (config.enabled && config.username) {
+    feedSection.style.display = "block";
+    link.href = `https://www.instagram.com/${config.username}/`;
+
+    // Generación de la vista previa usando widget/embed estático
+    iframe.src = `https://www.instagram.com/${config.username}/embed`;
   } else {
-    alert("Usuario o contraseña incorrectos.");
+    feedSection.style.display = "none";
+  }
+}*/
+
+async function loadInstagramFeed() {
+  const feedSection = document.getElementById('instagram-feed-section');
+  const iframe = document.getElementById('instaIframe');
+  const link = document.getElementById('instaLink');
+
+  if (!feedSection) return;
+
+  try {
+    // Lee la configuración desde el archivo del proyecto
+    const res = await fetch('./config.json');
+    const config = await res.json();
+
+    if (config.instagram && config.instagram.enabled && config.instagram.username) {
+      feedSection.style.display = 'block';
+      link.href = `https://www.instagram.com/${config.instagram.username}/`;
+      iframe.src = `https://www.instagram.com/${config.instagram.username}/embed`;
+    } else {
+      feedSection.style.display = 'none';
+    }
+  } catch (error) {
+    console.error('Error al cargar config.json:', error);
+    feedSection.style.display = 'none';
   }
 }
 
-function logoutAdmin() {
-  isAdmin = false;
-  document.getElementById("adminBanner").style.display = "none";
-  document.getElementById("addHorarioBtn").style.display = "none";
-  document.getElementById("authBtn").style.display = "inline-flex";
-}
 
-function openAddModal() {
-  document.getElementById("addModal").style.display = "flex";
-}
-
-function closeAddModal() {
-  document.getElementById("addModal").style.display = "none";
-}
-
-function handleAddHorario(e) {
-  e.preventDefault();
-  const newItem = {
-    id: horariosData.length + 1,
-    materia: document.getElementById("newMateria").value,
-    docente: document.getElementById("newDocente").value,
-    trayecto: document.getElementById("newTrayecto").value,
-    horario: document.getElementById("newHorario").value,
-    aula: document.getElementById("newAula").value,
-  };
-
-  horariosData.push(newItem);
-  renderHorarios(horariosData);
-  closeAddModal();
-  e.target.reset();
-}
-
-// Inicializar
 document.addEventListener("DOMContentLoaded", () => {
-  loadInitialData();
+  loadInstagramFeed();
+  initPortal();
+  lucide.createIcons();
 });
