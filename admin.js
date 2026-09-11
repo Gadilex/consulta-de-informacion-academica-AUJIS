@@ -229,7 +229,7 @@ async function deleteDoc(id) {
 
 // 5. RENDERIZAR LISTAS EN EL PANEL (ANTI-CACHÉ)
 async function loadDashboardLists() {
-  // Cargar Horarios
+  // 1. CARGAR Y RENDERIZAR HORARIOS
   try {
     const resH = await fetch('./horarios.json?t=' + Date.now());
     currentHorarios = resH.ok ? await resH.json() : [];
@@ -239,21 +239,22 @@ async function loadDashboardLists() {
       hContainer.innerHTML = '<p style="color:#94a3b8; font-size:0.85rem;">No hay horarios cargados.</p>';
     } else {
       hContainer.innerHTML = currentHorarios.map(h => `
-        <div class="admin-item-row">
+        <div class="admin-item-row" style="background: #0f172a; padding: 0.8rem; border-radius: 6px; border: 1px solid #334155; margin-bottom: 0.5rem; display: flex; justify-content: space-between; align-items: center;">
           <div>
-            <strong>${h.unidad}</strong> <small>(${h.trayecto})</small><br>
-            <span style="font-size:0.8rem; color:#94a3b8;">${h.docente} | ${h.horario}</span>
+            <strong style="color: #f8fafc; font-size: 0.95rem;">${h.unidad || h.materia || 'Sin Título'}</strong> 
+            <small style="color: #64748b; font-weight: 500;">(${h.trayecto})</small><br>
+            <span style="font-size: 0.8rem; color: #94a3b8;">${h.docente} | ${h.horario}</span>
           </div>
-          <div class="admin-item-actions">
-            <button type="button" onclick="startEditHorario('${h.id}')" class="btn-sm btn-edit">Editar</button>
-            <button type="button" onclick="deleteHorario('${h.id}')" class="btn-sm btn-delete">Eliminar</button>
+          <div class="admin-item-actions" style="display: flex; gap: 0.5rem;">
+            <button type="button" onclick="startEditHorario('${h.id}')" class="btn-sm btn-edit" style="background: #0284c7; color: #fff; border: none; padding: 0.3rem 0.6rem; border-radius: 4px; cursor: pointer;">Editar</button>
+            <button type="button" onclick="deleteHorario('${h.id}')" class="btn-sm btn-delete" style="background: #e11d48; color: #fff; border: none; padding: 0.3rem 0.6rem; border-radius: 4px; cursor: pointer;">Eliminar</button>
           </div>
         </div>
       `).join('');
     }
   } catch (err) { console.error(err); }
 
-  // Cargar Documentos
+  // 2. CARGAR Y RENDERIZAR DOCUMENTOS
   try {
     const resD = await fetch('./repositorio.json?t=' + Date.now());
     currentDocs = resD.ok ? await resD.json() : [];
@@ -263,20 +264,20 @@ async function loadDashboardLists() {
       dContainer.innerHTML = '<p style="color:#94a3b8; font-size:0.85rem;">No hay documentos cargados.</p>';
     } else {
       dContainer.innerHTML = currentDocs.map(d => `
-        <div class="admin-item-row">
+        <div class="admin-item-row" style="background: #0f172a; padding: 0.8rem; border-radius: 6px; border: 1px solid #334155; margin-bottom: 0.5rem; display: flex; justify-content: space-between; align-items: center;">
           <div>
-            <strong>${d.titulo}</strong> <small>(${d.categoria})</small>
+            <strong style="color: #f8fafc; font-size: 0.95rem;">${d.titulo}</strong> 
+            <small style="color: #64748b; font-weight: 500;">(${d.categoria})</small>
           </div>
-          <div class="admin-item-actions">
-            <button type="button" onclick="startEditDoc('${d.id}')" class="btn-sm btn-edit">Editar</button>
-            <button type="button" onclick="deleteDoc('${d.id}')" class="btn-sm btn-delete">Eliminar</button>
+          <div class="admin-item-actions" style="display: flex; gap: 0.5rem;">
+            <button type="button" onclick="startEditDoc('${d.id}')" class="btn-sm btn-edit" style="background: #0284c7; color: #fff; border: none; padding: 0.3rem 0.6rem; border-radius: 4px; cursor: pointer;">Editar</button>
+            <button type="button" onclick="deleteDoc('${d.id}')" class="btn-sm btn-delete" style="background: #e11d48; color: #fff; border: none; padding: 0.3rem 0.6rem; border-radius: 4px; cursor: pointer;">Eliminar</button>
           </div>
         </div>
       `).join('');
     }
   } catch (err) { console.error(err); }
 }
-
 async function saveInstaConfig(e) {
   if (e) e.preventDefault();
   const enabled = document.getElementById('instaToggle').checked;
