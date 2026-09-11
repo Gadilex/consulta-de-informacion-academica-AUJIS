@@ -38,5 +38,13 @@
     "trayecto": "Trayecto I",
     "horario": "asdfasd",
     "aula": "asdfafds"
+  },
+  {
+    "id": "1789094105009",
+    "unidad": "test",
+    "docente": "test",
+    "trayecto": "Trayecto I",
+    "horario": "test",
+    "aula": "test"
   }
 ]
