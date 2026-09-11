@@ -36,7 +36,7 @@ function logoutAdmin() {
 function getGitHubToken() {
   let token = localStorage.getItem('gh_admin_token');
   if (!token) {
-    token = prompt('Introduce tu Personal Access Token de GitHub para publicar cambios en Vercel:');
+    token = prompt('Introduce tu Personal Access Token de GitHub para publicar cambios:');
     if (token) {
       token = token.trim();
       localStorage.setItem('gh_admin_token', token);
@@ -87,7 +87,7 @@ async function saveToJsonInGitHub(filePath, newJsonObject, commitMessage) {
     });
 
     if (putRes.ok) {
-      alert('✅ ¡Cambios guardados con éxito! En unos segundos Vercel actualizará la página.');
+      alert('✅ ¡Cambios guardados con éxito! Se actualizarán los datos en la web.');
       loadDashboardLists();
       return true;
     } else {
@@ -119,13 +119,11 @@ async function saveNewHorario(e) {
   const aula = document.getElementById('addAula').value.trim();
 
   if (editId) {
-    // Modo Edición
     const index = currentHorarios.findIndex(h => h.id.toString() === editId.toString());
     if (index !== -1) {
       currentHorarios[index] = { id: editId, unidad, docente, trayecto, horario: diaHorario, aula };
     }
   } else {
-    // Modo Nuevo
     currentHorarios.push({
       id: Date.now().toString(),
       unidad, docente, trayecto, horario: diaHorario, aula
@@ -168,24 +166,28 @@ async function deleteHorario(id) {
   await saveToJsonInGitHub('horarios.json', currentHorarios, 'Eliminar horario');
 }
 
-// 4. GESTIÓN DE DOCUMENTOS (CREAR / EDITAR / ELIMINAR)
+// 4. GESTIÓN DE DOCUMENTOS (CON URL DE DESCARGA)
 async function saveNewDoc(e) {
   if (e) e.preventDefault();
 
   const editId = document.getElementById('editDocId').value;
   const titulo = document.getElementById('addDocTitulo').value.trim();
   const categoria = document.getElementById('addDocCat').value.trim();
+  const url = document.getElementById('addDocUrl').value.trim();
   const contenido = document.getElementById('addDocContenido').value.trim();
 
   if (editId) {
     const index = currentDocs.findIndex(d => d.id.toString() === editId.toString());
     if (index !== -1) {
-      currentDocs[index] = { ...currentDocs[index], titulo, categoria, contenido };
+      currentDocs[index] = { ...currentDocs[index], titulo, categoria, url, contenido };
     }
   } else {
     currentDocs.push({
       id: Date.now().toString(),
-      titulo, categoria, contenido,
+      titulo,
+      categoria,
+      url,
+      contenido,
       fecha: new Date().toISOString().split('T')[0]
     });
   }
@@ -201,6 +203,7 @@ function startEditDoc(id) {
   document.getElementById('editDocId').value = item.id;
   document.getElementById('addDocTitulo').value = item.titulo;
   document.getElementById('addDocCat').value = item.categoria;
+  document.getElementById('addDocUrl').value = item.url || '';
   document.getElementById('addDocContenido').value = item.contenido;
 
   document.getElementById('docFormTitle').innerHTML = '<i data-lucide="edit"></i> Editar Documento';
@@ -224,11 +227,11 @@ async function deleteDoc(id) {
   await saveToJsonInGitHub('repositorio.json', currentDocs, 'Eliminar documento');
 }
 
-// 5. RENDERIZAR LISTAS EN EL PANEL
+// 5. RENDERIZAR LISTAS EN EL PANEL (ANTI-CACHÉ)
 async function loadDashboardLists() {
   // Cargar Horarios
   try {
-    const resH = await fetch('./horarios.json?cache=' + Date.now());
+    const resH = await fetch('./horarios.json?t=' + Date.now());
     currentHorarios = resH.ok ? await resH.json() : [];
     const hContainer = document.getElementById('horariosList');
     
@@ -252,7 +255,7 @@ async function loadDashboardLists() {
 
   // Cargar Documentos
   try {
-    const resD = await fetch('./repositorio.json?cache=' + Date.now());
+    const resD = await fetch('./repositorio.json?t=' + Date.now());
     currentDocs = resD.ok ? await resD.json() : [];
     const dContainer = document.getElementById('docsList');
 
@@ -284,7 +287,7 @@ async function saveInstaConfig(e) {
 
 async function loadAdminConfig() {
   try {
-    const res = await fetch('./config.json?cache=' + Date.now());
+    const res = await fetch('./config.json?t=' + Date.now());
     if (res.ok) {
       const config = await res.json();
       if (config.instagram) {

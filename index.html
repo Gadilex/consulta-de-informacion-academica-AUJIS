@@ -3,6 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- ETIQUETAS PARA PREVENIR LA CACHÉ DEL NAVEGADOR -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+
     <title>Aldea Universitaria "José Isidro Silva" - Portal Académico</title>
     <link rel="stylesheet" href="styles.css" />
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -11,9 +17,7 @@
     <!-- Barra Superior / Top Bar -->
     <div class="top-bar">
       <div class="container top-bar-content">
-        <span
-          >República Bolivariana de Venezuela • MPPEU • Misión Sucre Zulia</span
-        >
+        <span>República Bolivariana de Venezuela • MPPEU • Misión Sucre Zulia</span>
         <div class="top-links">
           <small>Municipio Santa Rita, Edo. Zulia</small>
         </div>
@@ -38,18 +42,9 @@
         </div>
         <nav class="nav-menu">
           <a href="#inicio" class="nav-link active">Inicio</a>
-          <a href="#horarios" class="nav-link" onclick="switchTab('horarios')"
-            >Horarios</a
-          >
-          <a href="#docentes" class="nav-link" onclick="switchTab('horarios')"
-            >Docentes</a
-          >
-          <a
-            href="#repositorio"
-            class="nav-link"
-            onclick="switchTab('repositorio')"
-            >Documentos</a
-          >
+          <a href="#horarios" class="nav-link" onclick="switchTab('horarios')">Horarios</a>
+          <a href="#docentes" class="nav-link" onclick="switchTab('horarios')">Docentes</a>
+          <a href="#repositorio" class="nav-link" onclick="switchTab('repositorio')">Documentos</a>
         </nav>
       </div>
     </header>
@@ -66,16 +61,10 @@
             institucionales de la Aldea "José Isidro Silva".
           </p>
           <div class="hero-actions">
-            <button
-              class="btn-primary"
-              onclick="scrollToSection('tab-horarios')"
-            >
+            <button class="btn-primary" onclick="switchTab('horarios')">
               <i data-lucide="calendar"></i> Consultar Horarios
             </button>
-            <button
-              class="btn-secondary"
-              onclick="scrollToSection('tab-repositorio')"
-            >
+            <button class="btn-secondary" onclick="switchTab('repositorio')">
               <i data-lucide="file-text"></i> Repositorio Digital
             </button>
           </div>
@@ -132,7 +121,7 @@
         </button>
       </nav>
 
-      <!-- SECCIÓN: Horarios y Docentes -->
+      <!-- SECCIÓN 1: Horarios y Docentes -->
       <section id="tab-horarios" class="tab-content active">
         <div class="filter-card">
           <div class="search-box">
@@ -171,7 +160,7 @@
         </div>
       </section>
 
-      <!-- SECCIÓN: Repositorio Digital (Ubicada ANTES de Instagram) -->
+      <!-- SECCIÓN 2: Repositorio Digital -->
       <section id="tab-repositorio" class="tab-content">
         <div class="section-title">
           <h3>Repositorio Digital de Documentación Oficial</h3>
@@ -179,10 +168,10 @@
             Descarga directa de cronogramas, normativas y formatos de proyecto.
           </p>
         </div>
-        <div class="repo-grid" id="repoGrid"></div>
+        <div class="repo-grid" id="repoGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 1rem;"></div>
       </section>
 
-      <!-- SECCIÓN: Feed de Instagram (Ubicada al final) -->
+      <!-- SECCIÓN 3: Feed de Instagram (Al final) -->
       <section
         id="instagram-feed-section"
         class="card-box"
@@ -215,12 +204,11 @@
         <div
           class="insta-feed-wrapper"
           style="
-            border-radius: var(--radius);
+            border-radius: var(--radius, 8px);
             overflow: hidden;
             background: #fff;
           "
         >
-          <!-- Embed / Muestra del Feed -->
           <iframe
             id="instaIframe"
             src=""
@@ -247,10 +235,10 @@
         </div>
         <div class="footer-info">
           <p>&copy; 2026 - Misión Sucre / MPPEU</p>
-          <small
-            >Desarrollado para la optimización de procesos de orientación
-            estudiantil e información académica.</small
-          >
+          <small>
+            Desarrollado para la optimización de procesos de orientación
+            estudiantil e información académica.
+          </small>
         </div>
       </div>
     </footer>

@@ -3,149 +3,144 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Acceso Administrativo - Aldea "José Isidro Silva"</title>
+    <title>Panel de Administración - Aldea Universitaria "José Isidro Silva"</title>
     <link rel="stylesheet" href="styles.css" />
     <script src="https://unpkg.com/lucide@latest"></script>
   </head>
-  <body class="admin-body">
-    <div class="admin-login-card" id="loginBox">
-      <div class="admin-header">
-        <img src="logo.png" alt="Logo" width="60" height="70" />
-        <h2>Panel Administrativo</h2>
-        <p>Aldea Universitaria "José Isidro Silva"</p>
-      </div>
-
-      <form id="adminLoginForm" onsubmit="handleAdminLogin(event)">
-        <div class="form-group">
-          <label><i data-lucide="user"></i> Usuario</label>
-          <input
-            type="text"
-            id="adminUser"
-            required
-            placeholder="Ingrese su usuario"
-          />
-        </div>
-        <div class="form-group">
-          <label><i data-lucide="key"></i> Contraseña</label>
-          <input
-            type="password"
-            id="adminPass"
-            required
-            placeholder="••••••••"
-          />
-        </div>
-        <button type="submit" class="btn-primary full-width">
-          Iniciar Sesión
-        </button>
-      </form>
-    </div>
-
-    <!-- Panel de Gestión -->
-    <div
-      class="container admin-dashboard"
-      id="adminDashboard"
-      style="display: none"
-    >
-      <header class="admin-dash-header">
-        <div>
-          <h2>
-            <i data-lucide="shield-check"></i> Gestión de Información Académica
-          </h2>
-          <p>
-            Los cambios realizados aquí se guardan directamente en el servidor activo.
-          </p>
-        </div>
-        <button onclick="logoutAdmin()" class="btn-secondary">
-          <i data-lucide="log-out"></i> Salir del Panel
-        </button>
-      </header>
-
-      <div class="admin-grid">
-        <!-- Sección Horarios -->
-        <div class="card-box">
-          <h3 id="horarioFormTitle"><i data-lucide="plus-circle"></i> Registrar Horario / Docente</h3>
-          <form onsubmit="saveNewHorario(event)" id="horarioForm">
-            <input type="hidden" id="editHorarioId" value="" />
-            <div class="form-group">
-              <label>Unidad Curricular</label>
-              <input type="text" id="addMateria" required placeholder="Ej: Proyecto Socio-Tecnológico" />
-            </div>
-            <div class="form-group">
-              <label>Docente Colaborador</label>
-              <input type="text" id="addDocente" required placeholder="Ej: Ing. Carlos Mendoza" />
-            </div>
-            <div class="form-group">
-              <label>Trayecto / PNF</label>
-              <select id="addTrayecto">
-                <option value="Trayecto I">Trayecto I</option>
-                <option value="Trayecto II">Trayecto II</option>
-                <option value="Trayecto III">Trayecto III</option>
-                <option value="Trayecto IV">Trayecto IV</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label>Día y Horario</label>
-              <input type="text" id="addHorario" required placeholder="Ej: Sábados 08:00 AM - 11:30 AM" />
-            </div>
-            <div class="form-group">
-              <label>Aula / Espacio</label>
-              <input type="text" id="addAula" required placeholder="Ej: Lab 01" />
-            </div>
-            <button type="submit" id="btnSaveHorario" class="btn-primary full-width">Guardar Horario</button>
-            <button type="button" id="btnCancelHorario" onclick="cancelEditHorario()" class="btn-secondary full-width" style="display:none; margin-top: 0.5rem;">Cancelar Edición</button>
-          </form>
-
-          <hr style="border-color: #334155; margin: 1.5rem 0;" />
-          <h4><i data-lucide="list"></i> Horarios Publicados</h4>
-          <div id="horariosList" class="admin-list">Cargando horarios...</div>
-        </div>
-
-        <!-- Configuración Feed Instagram -->
-        <div class="card-box">
-          <h3><i data-lucide="instagram"></i> Configuración Feed Instagram</h3>
-          <form onsubmit="saveInstaConfig(event)">
-            <div class="form-group" style="display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1.2rem;">
-              <label style="margin: 0; font-weight: 600">Mostrar Feed en la Página Principal</label>
-              <label class="switch">
-                <input type="checkbox" id="instaToggle" />
-                <span class="slider round"></span>
-              </label>
-            </div>
-            <div class="form-group">
-              <label>Usuario de Instagram (sin @)</label>
-              <input type="text" id="instaUsername" placeholder="Ej: mision_sucre_zulia" required />
-            </div>
-            <button type="submit" class="btn-primary full-width">Guardar Configuración</button>
-          </form>
-        </div>
-
-        <!-- Sección Documentos -->
-        <div class="card-box">
-          <h3 id="docFormTitle"><i data-lucide="file-plus"></i> Registrar Documento Oficial</h3>
-          <form onsubmit="saveNewDoc(event)" id="docForm">
-            <input type="hidden" id="editDocId" value="" />
-            <div class="form-group">
-              <label>Título del Documento</label>
-              <input type="text" id="addDocTitulo" required placeholder="Ej: Calendario II-2026" />
-            </div>
-            <div class="form-group">
-              <label>Categoría</label>
-              <input type="text" id="addDocCat" required placeholder="Ej: Cronogramas" />
-            </div>
-            <div class="form-group">
-              <label>Contenido / Resumen</label>
-              <textarea id="addDocContenido" rows="3" required placeholder="Descripción informativa..."></textarea>
-            </div>
-            <button type="submit" id="btnSaveDoc" class="btn-primary full-width">Guardar Documento</button>
-            <button type="button" id="btnCancelDoc" onclick="cancelEditDoc()" class="btn-secondary full-width" style="display:none; margin-top: 0.5rem;">Cancelar Edición</button>
-          </form>
-
-          <hr style="border-color: #334155; margin: 1.5rem 0;" />
-          <h4><i data-lucide="file-text"></i> Documentos Publicados</h4>
-          <div id="docsList" class="admin-list">Cargando documentos...</div>
+  <body>
+    <!-- Barra Superior -->
+    <div class="top-bar">
+      <div class="container top-bar-content">
+        <span>Gestión de Contenido - Portal Académico</span>
+        <div class="top-links">
+          <small>Aldea Universitaria "José Isidro Silva"</small>
         </div>
       </div>
     </div>
+
+    <main class="container" style="padding-top: 2rem; padding-bottom: 3rem;">
+      <!-- CAJA DE LOGIN -->
+      <div id="loginBox" class="card-box" style="max-width: 400px; margin: 2rem auto;">
+        <h2><i data-lucide="lock"></i> Acceso Administrativo</h2>
+        <p style="font-size: 0.85rem; color: #94a3b8;">Ingrese sus credenciales para gestionar el portal.</p>
+        <form onsubmit="handleAdminLogin(event)">
+          <div class="form-group" style="margin-bottom: 1rem;">
+            <label>Usuario</label>
+            <input type="text" id="adminUser" required placeholder="admin" style="width: 100%; padding: 0.5rem; border-radius: 4px; border: 1px solid #334155; background: #0f172a; color: #fff;" />
+          </div>
+          <div class="form-group" style="margin-bottom: 1rem;">
+            <label>Contraseña</label>
+            <input type="password" id="adminPass" required style="width: 100%; padding: 0.5rem; border-radius: 4px; border: 1px solid #334155; background: #0f172a; color: #fff;" />
+          </div>
+          <button type="submit" class="btn-primary full-width">Iniciar Sesión</button>
+        </form>
+      </div>
+
+      <!-- DASHBOARD DE ADMINISTRACIÓN -->
+      <div id="adminDashboard" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+          <h2><i data-lucide="settings"></i> Panel de Control</h2>
+          <button onclick="logoutAdmin()" class="btn-secondary"><i data-lucide="log-out"></i> Cerrar Sesión</button>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem;">
+          
+          <!-- FORMULARIO 1: GESTIÓN DE HORARIOS -->
+          <div class="card-box">
+            <h3 id="horarioFormTitle"><i data-lucide="plus-circle"></i> Registrar Horario / Docente</h3>
+            <form id="horarioForm" onsubmit="saveNewHorario(event)">
+              <input type="hidden" id="editHorarioId" value="" />
+              
+              <div class="form-group" style="margin-bottom: 0.8rem;">
+                <label>Unidad Curricular / Materia</label>
+                <input type="text" id="addMateria" required placeholder="Ej: Algorítmica y Programación" style="width: 100%; padding: 0.5rem; border-radius: 4px; border: 1px solid #334155; background: #0f172a; color: #fff;" />
+              </div>
+              
+              <div class="form-group" style="margin-bottom: 0.8rem;">
+                <label>Docente Colaborador</label>
+                <input type="text" id="addDocente" required placeholder="Ej: Ing. María Pérez" style="width: 100%; padding: 0.5rem; border-radius: 4px; border: 1px solid #334155; background: #0f172a; color: #fff;" />
+              </div>
+
+              <div class="form-group" style="margin-bottom: 0.8rem;">
+                <label>Trayecto / PNF</label>
+                <select id="addTrayecto" style="width: 100%; padding: 0.5rem; border-radius: 4px; border: 1px solid #334155; background: #0f172a; color: #fff;">
+                  <option value="Trayecto I">Trayecto I</option>
+                  <option value="Trayecto II">Trayecto II</option>
+                  <option value="Trayecto III">Trayecto III</option>
+                  <option value="Trayecto IV">Trayecto IV</option>
+                </select>
+              </div>
+
+              <div class="form-group" style="margin-bottom: 0.8rem;">
+                <label>Día y Horario</label>
+                <input type="text" id="addHorario" required placeholder="Ej: Sábados 08:00 AM - 10:00 AM" style="width: 100%; padding: 0.5rem; border-radius: 4px; border: 1px solid #334155; background: #0f172a; color: #fff;" />
+              </div>
+
+              <div class="form-group" style="margin-bottom: 1rem;">
+                <label>Aula / Espacio</label>
+                <input type="text" id="addAula" required placeholder="Ej: Aula 03" style="width: 100%; padding: 0.5rem; border-radius: 4px; border: 1px solid #334155; background: #0f172a; color: #fff;" />
+              </div>
+
+              <button type="submit" id="btnSaveHorario" class="btn-primary full-width">Guardar Horario</button>
+              <button type="button" id="btnCancelHorario" onclick="cancelEditHorario()" class="btn-secondary full-width" style="display:none; margin-top: 0.5rem;">Cancelar Edición</button>
+            </form>
+
+            <hr style="border-color: #334155; margin: 1.5rem 0;" />
+            <h4><i data-lucide="list"></i> Horarios Registrados</h4>
+            <div id="horariosList" class="admin-list" style="margin-top: 1rem; display: flex; flex-direction: column; gap: 0.5rem;">Cargando horarios...</div>
+          </div>
+
+          <!-- FORMULARIO 2: REPOSISTORIO DIGITAL (CON URL) -->
+          <div class="card-box">
+            <h3 id="docFormTitle"><i data-lucide="file-plus"></i> Registrar Documento Oficial</h3>
+            <form id="docForm" onsubmit="saveNewDoc(event)">
+              <input type="hidden" id="editDocId" value="" />
+
+              <div class="form-group" style="margin-bottom: 0.8rem;">
+                <label>Título del Documento</label>
+                <input type="text" id="addDocTitulo" required placeholder="Ej: Calendario Académico II-2026" style="width: 100%; padding: 0.5rem; border-radius: 4px; border: 1px solid #334155; background: #0f172a; color: #fff;" />
+              </div>
+
+              <div class="form-group" style="margin-bottom: 0.8rem;">
+                <label>Categoría</label>
+                <input type="text" id="addDocCat" required placeholder="Ej: Cronogramas / Formatos" style="width: 100%; padding: 0.5rem; border-radius: 4px; border: 1px solid #334155; background: #0f172a; color: #fff;" />
+              </div>
+
+              <div class="form-group" style="margin-bottom: 0.8rem;">
+                <label>URL / Enlace de Descarga</label>
+                <input type="url" id="addDocUrl" required placeholder="https://drive.google.com/... o enlace directo al archivo" style="width: 100%; padding: 0.5rem; border-radius: 4px; border: 1px solid #334155; background: #0f172a; color: #fff;" />
+              </div>
+
+              <div class="form-group" style="margin-bottom: 1rem;">
+                <label>Descripción Breve / Contenido</label>
+                <textarea id="addDocContenido" rows="2" required placeholder="Descripción breve del archivo..." style="width: 100%; padding: 0.5rem; border-radius: 4px; border: 1px solid #334155; background: #0f172a; color: #fff;"></textarea>
+              </div>
+
+              <button type="submit" id="btnSaveDoc" class="btn-primary full-width">Guardar Documento</button>
+              <button type="button" id="btnCancelDoc" onclick="cancelEditDoc()" class="btn-secondary full-width" style="display:none; margin-top: 0.5rem;">Cancelar Edición</button>
+            </form>
+
+            <hr style="border-color: #334155; margin: 1.5rem 0;" />
+            <h4><i data-lucide="file-text"></i> Documentos Publicados</h4>
+            <div id="docsList" class="admin-list" style="margin-top: 1rem; display: flex; flex-direction: column; gap: 0.5rem;">Cargando documentos...</div>
+          </div>
+
+        </div>
+
+        <!-- FORMULARIO 3: CONFIGURACIÓN INSTAGRAM -->
+        <div class="card-box" style="margin-top: 2rem;">
+          <h3><i data-lucide="instagram"></i> Configuración de Feed de Instagram</h3>
+          <form onsubmit="saveInstaConfig(event)" style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; margin-top: 1rem;">
+            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+              <input type="checkbox" id="instaToggle" /> Activar Feed en la Web
+            </label>
+            <input type="text" id="instaUsername" placeholder="Usuario de Instagram (ej: aldeaisidrosilva)" style="padding: 0.5rem; border-radius: 4px; border: 1px solid #334155; background: #0f172a; color: #fff; flex: 1; min-width: 200px;" />
+            <button type="submit" class="btn-secondary">Guardar Configuración</button>
+          </form>
+        </div>
+
+      </div>
+    </main>
 
     <script src="admin.js"></script>
   </body>
