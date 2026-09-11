@@ -38,5 +38,13 @@
     "trayecto": "Trayecto II",
     "horario": "test",
     "aula": "test"
+  },
+  {
+    "id": "1789092409736",
+    "unidad": "efa",
+    "docente": "sadfads",
+    "trayecto": "Trayecto I",
+    "horario": "asdfasd",
+    "aula": "asdfafds"
   }
 ]
